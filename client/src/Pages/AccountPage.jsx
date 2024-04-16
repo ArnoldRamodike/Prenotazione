@@ -68,8 +68,11 @@ My Accomodations</Link>
 
         { subpage == 'profile' &&(
           <div className="text-center max-w-lg mx-auto">
-           logged in as {user.name} ({user.email}) <br />
-           <button onClick={Logout} className="primary max-w-sm mt-2">Logout</button>
+            <h2 className="text-2xl my-4">Account Profile Details</h2>
+            <input type="text" placeholder={'Add using link ...jpg'} value={user.name} />
+            <input type="text" placeholder={'Add using link ...jpg'} value={user.email} disabled />
+          <br />
+           <button onClick={Logout} className="primary max-w-sm mt-20">Logout</button>
           </div>
         )}
 
