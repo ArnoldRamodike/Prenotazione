@@ -4,15 +4,18 @@ const jwt = require('jsonwebtoken');
 const bycypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
 const User = require('./models/User');
-const { default: mongoose } = require('mongoose');
+const  mongoose  = require('mongoose');
+const imageDownloader = require('image-downloader');
 require('dotenv').config();
 const app = express();
 
 const bycyptSalt = bycypt.genSaltSync(10);
 const jwtSecrete = 'thisisjwt'
 
+// Middlewares
 app.use(cookieParser());
 app.use(express.json());
+app.use('/uploads', express.static(__dirname+'/uploads'));
 app.use(cors({
     credentials: true,
     origin: 'http://localhost:5173'
@@ -29,7 +32,8 @@ app.post('/register', async (req, res) => {
 
     try {
            const userDoc = await User.create({
-            name, email, 
+            name, 
+            email, 
             password : bycypt.hashSync(password, bycyptSalt),
         })
         req.json(userDoc);
@@ -67,7 +71,7 @@ app.post('/login', async (req, res) => {
     }
 })
 
-app.post('/profile', async (req, res) => {
+app.get('/profile', async (req, res) => {
     const { token} = req.cookies;
     if (token) {
         jwt.verify(token, jwtSecrete, {}, async(err, user) => {
@@ -79,6 +83,21 @@ app.post('/profile', async (req, res) => {
     }else{
         res.json(null);
     }
+});
+
+app.post('/logout', async (req, res) => {
+    res.cookie('token', '').json(true);
 })
+
+app.post('/upload-by-link', async (req, res) => {
+    const {link} = req.body;
+    const newName = 'photo' + Date.now()+'.jpg';
+   await imageDownloader.image({
+        url: link,
+        dest: __dirname + '/uploads/' + newName,
+    });
+    res.json(newName);
+})
+
 
 app.listen(4000);
