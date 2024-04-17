@@ -6,7 +6,13 @@ const cookieParser = require('cookie-parser');
 const User = require('./models/User');
 const  mongoose  = require('mongoose');
 const imageDownloader = require('image-downloader');
+const multer = require('multer');
+const fs = require('fs');
+
 require('dotenv').config();
+
+
+// SERVICE
 const app = express();
 
 const bycyptSalt = bycypt.genSaltSync(10);
@@ -99,5 +105,19 @@ app.post('/upload-by-link', async (req, res) => {
     res.json(newName);
 })
 
+const photosMiddleware = multer({dest:'uploads/'});
+app.post('/upload', photosMiddleware.array('photos', 100), 
+    async (req, res) => {
+        const uploadedFiles= [];
+        for (let i = 0; i < req.files.length; i++) {
+            const {path, originalname} = req.files[i];
+            const parts = originalname.split('.');
+            const ext = parts[parts.length - 1];
+            const newpath = path + '.' + ext;
+            fs.renameSync(path, newpath);
+            uploadedFiles.push(newpath.replace('uploads\\', ''));
+        }
+    res.json(uploadedFiles);
+})
 
 app.listen(4000);
