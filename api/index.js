@@ -8,6 +8,7 @@ const  mongoose  = require('mongoose');
 const imageDownloader = require('image-downloader');
 const multer = require('multer');
 const fs = require('fs');
+const Place = require('./models/Place');
 
 require('dotenv').config();
 
@@ -42,7 +43,7 @@ app.post('/register', async (req, res) => {
             email, 
             password : bycypt.hashSync(password, bycyptSalt),
         })
-        req.json(userDoc);
+        res.json(userDoc);
     } catch (error) {
         res.status(422).json(error);
     }
@@ -118,6 +119,27 @@ app.post('/upload', photosMiddleware.array('photos', 100),
             uploadedFiles.push(newpath.replace('uploads\\', ''));
         }
     res.json(uploadedFiles);
+})
+
+app.post('/places', async (req, res) => {
+    const {title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest  } = req.body;
+    const { token} = req.cookies;
+    try {
+            jwt.verify(token, jwtSecrete, {}, async(err, user) => {
+                if (err) throw err;
+    
+                const placeDoc = await Place.create({
+                   owner: user._id,
+                   title, address, 
+                   addedPhotos, description,
+                   perks,extraInfo, 
+                   checkIn, checkOut, maxGuest
+                })
+                res.json(placeDoc);
+            })
+    } catch (error) {
+        res.status(422).json(error);
+    }
 })
 
 app.listen(4000);
