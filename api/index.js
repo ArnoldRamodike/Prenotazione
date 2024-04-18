@@ -129,7 +129,7 @@ app.post('/places', async (req, res) => {
                 if (err) throw err;
     
                 const placeDoc = await Place.create({
-                   owner: user._id,
+                   owner: user.id,
                    title, address, 
                    addedPhotos, description,
                    perks,extraInfo, 
@@ -141,5 +141,22 @@ app.post('/places', async (req, res) => {
         res.status(422).json(error);
     }
 })
+
+app.get('/places', async (req, res) => {
+    const { token} = req.cookies;
+        jwt.verify(token, jwtSecrete, {}, async(err, user) => {
+            if (err) throw err;
+            const {id} = user;
+            const places =  await Place.find({owner: id});
+            res.json(places);
+        })
+});
+
+app.get('/places/:id', async (req, res) => {
+    const {id} = req.params;
+         const place =  await Place.find({_id: id});
+         res.json(place);
+
+});
 
 app.listen(4000);
