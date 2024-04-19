@@ -155,9 +155,8 @@ app.get('/places', async (req, res) => {
 
 app.get('/places/:id', async (req, res) => {
     const {id} = req.params;
-         const place =  await Place.find({_id: id});
+         const [place] =  await Place.find({_id: id});
          res.json(place);
-
 });
 
 app.put('/places/:id', async (req, res) => {
