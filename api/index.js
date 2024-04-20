@@ -122,7 +122,7 @@ app.post('/upload', photosMiddleware.array('photos', 100),
 })
 
 app.post('/places', async (req, res) => {
-    const {title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest  } = req.body;
+    const {title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest, price } = req.body;
     const { token} = req.cookies;
     try {
             jwt.verify(token, jwtSecrete, {}, async(err, user) => {
@@ -134,7 +134,7 @@ app.post('/places', async (req, res) => {
                    photos:addedPhotos, 
                    description,perks,
                    extraInfo, checkIn, 
-                   checkOut, maxGuest
+                   checkOut, maxGuest, price
                 })
                 res.json(placeDoc);
             })
@@ -143,7 +143,7 @@ app.post('/places', async (req, res) => {
     }
 })
 
-app.get('/places', async (req, res) => {
+app.get('/user-places', async (req, res) => {
     const { token} = req.cookies;
         jwt.verify(token, jwtSecrete, {}, async(err, user) => {
             if (err) throw err;
@@ -153,6 +153,11 @@ app.get('/places', async (req, res) => {
         })
 });
 
+app.get('/places', async (req, res) => {
+            const places =  await Place.find();
+            res.json(places);
+});
+
 app.get('/places/:id', async (req, res) => {
     const {id} = req.params;
          const [place] =  await Place.find({_id: id});
@@ -160,7 +165,7 @@ app.get('/places/:id', async (req, res) => {
 });
 
 app.put('/places/:id', async (req, res) => {
-    const {id, title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest  } = req.body;
+    const {id, title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest, price } = req.body;
     const { token} = req.cookies;
 
     try {
@@ -172,7 +177,8 @@ app.put('/places/:id', async (req, res) => {
                    title, address, 
                    photos:addedPhotos, description,
                    perks,extraInfo, 
-                   checkIn, checkOut, maxGuest
+                   checkIn, checkOut, 
+                   maxGuest, price
                 });
                 await placeDoc.save();
                 res.json('ok');
