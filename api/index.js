@@ -34,7 +34,7 @@ app.get('/api', (req, res) => {
     res.json('test ok');
 });
 
-function getUserDataFromToken(req) {
+function getUserDataFromReq(req) {
     return new Promise((resolve, reject) => {
         jwt.verify(req.cookies.token, jwtSecrete, {}, async(err, user) => {
             if (err) throw err;
@@ -199,15 +199,17 @@ app.put('/places/:id', async (req, res) => {
 });
 
 app.post('/bookings', async (req, res) => {
+    const user = await getUserDataFromReq(req);
     const {place, checkIn, checkOut, numberOfGuests, name, phone, price} = req.body;
     if (!place, !checkIn, !checkOut, !numberOfGuests, !name, !phone, !price) {
         res.status(422).json({message:'please enter valid fields'})
     }
     try {
         const bookingDoc = await Booking.create({
-            place,
-            checkIn, checkOut, numberOfGuests,
-            name, phone,price
+            place, user: user.id,
+            checkIn, checkOut, 
+            numberOfGuests, name, 
+            phone, price
             })
 
             res.json(bookingDoc);
@@ -217,11 +219,11 @@ app.post('/bookings', async (req, res) => {
 });
 
 
-app.get('/places', async (req, res) => {
+app.get('/bookings', async (req, res) => {
 
-        const user = await getUserDataFromToken(req);
+        const user = await getUserDataFromReq(req);
             const {id} = user;
-            const bookingDoc =  await Booking.find({owner: id});
+            const bookingDoc =  await Booking.find({user: id}).populate('place');
             res.json(bookingDoc);
         
 });
