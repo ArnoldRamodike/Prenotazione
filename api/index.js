@@ -220,12 +220,10 @@ app.post('/bookings', async (req, res) => {
 
 
 app.get('/bookings', async (req, res) => {
-
-        const user = await getUserDataFromReq(req);
-            const {id} = user;
-            const bookingDoc =  await Booking.find({user: id}).populate('place');
-            res.json(bookingDoc);
-        
+    const user = await getUserDataFromReq(req);
+    const {id} = user;
+    const bookingDoc =  await Booking.find({user: id}).populate('place');
+    res.json(bookingDoc);
 });
 
 app.listen(4000);
