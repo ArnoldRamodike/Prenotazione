@@ -41,8 +41,8 @@ const AccountPage = () => {
         { subpage == 'profile' &&(
           <div className="text-center max-w-lg mx-auto">
             <h2 className="text-2xl my-4">Account Profile Details</h2>
-            <input type="text" placeholder={'Add using link ...jpg'} value={user.name} />
-            <input type="text" placeholder={'Add using link ...jpg'} value={user.email} disabled />
+            <input type="text" placeholder={'username '} value={user.name} onChange={ev => ()=>{ev.target.value}}/>
+            <input type="text" placeholder={'email Address'} value={user.email} disabled />
           <br />
            <button onClick={Logout} className="primary max-w-sm mt-20">Logout</button>
           </div>
