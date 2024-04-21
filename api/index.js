@@ -3,16 +3,15 @@ const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bycypt = require('bcryptjs');
 const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
 const User = require('./models/User');
-const  mongoose  = require('mongoose');
+const Place = require('./models/Place');
+const Booking = require('./models/Booking');
 const imageDownloader = require('image-downloader');
 const multer = require('multer');
 const fs = require('fs');
-const Place = require('./models/Place');
-const Booking = require('./models/Booking');
 
 require('dotenv').config();
-
 
 // SERVICE
 const app = express();
@@ -34,6 +33,15 @@ mongoose.connect(process.env.MONGODB_URL);
 app.get('/api', (req, res) => {
     res.json('test ok');
 });
+
+function getUserDataFromToken(req) {
+    return new Promise((resolve, reject) => {
+        jwt.verify(req.cookies.token, jwtSecrete, {}, async(err, user) => {
+            if (err) throw err;
+            resolve(user);
+        });
+    }); 
+}
 
 app.post('/register', async (req, res) => {
     const {name, email, password} = req.body;
@@ -190,16 +198,32 @@ app.put('/places/:id', async (req, res) => {
     }
 });
 
-app.post('/booking', (req, res) => {
-    const {place, checkIn, checkOut, numberOfGuests, name, phone, price} = req.params;
+app.post('/bookings', async (req, res) => {
+    const {place, checkIn, checkOut, numberOfGuests, name, phone, price} = req.body;
+    if (!place, !checkIn, !checkOut, !numberOfGuests, !name, !phone, !price) {
+        res.status(422).json({message:'please enter valid fields'})
+    }
+    try {
+        const bookingDoc = await Booking.create({
+            place,
+            checkIn, checkOut, numberOfGuests,
+            name, phone,price
+            })
 
-         const [booking] =  Booking.create(
-            {place, checkIn, checkOut, numberOfGuests, name, phone, price}
-         ).then((err) => {
-            if (er) throw err;
-            res.json(booking);
-         })
-         
+            res.json(bookingDoc);
+    } catch (error) {
+        res.status(422).json(error);
+    }
+});
+
+
+app.get('/places', async (req, res) => {
+
+        const user = await getUserDataFromToken(req);
+            const {id} = user;
+            const bookingDoc =  await Booking.find({owner: id});
+            res.json(bookingDoc);
+        
 });
 
 app.listen(4000);
