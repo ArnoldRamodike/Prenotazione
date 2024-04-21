@@ -1,13 +1,45 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {differenceInCalendarDays} from 'date-fns'
+import axios from "axios";
+import { Navigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
 const BookingWidget = ({place}) => {
     const [checkIn, setCheckIn] = useState('');
     const [checkOut, setCheckOut] = useState('');
     const [numberOfGuests, setNumberOfGuests] = useState(1);
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [redirect, setRedirect] = useState('');
+    const {user} = useContext(UserContext);
+
+    useEffect(() => {
+      if (user) {
+        setName(user.name)
+      }
+    },[user])
+
     let numberOfNights = 0;
     if (checkIn && checkOut) {
         numberOfNights = differenceInCalendarDays(new Date(checkOut), new Date(checkIn));
+    }
+    async function bookThisPlace(ev) {
+        ev.preventDefault();
+        const response = {
+            place: place._id,
+            checkIn, checkOut, numberOfGuests,
+            name, phone,
+            price: numberOfNights * place.price
+           }  
+           console.log(response);
+         await axios.post('/bookings', response);  
+           
+        const bookingId = response._id;
+        setRedirect(`/account/bookings/${bookingId}`);
+    }
+
+    if (redirect) {
+        return <Navigate to={redirect}/>
     }
   return (
     <div>
@@ -29,9 +61,17 @@ const BookingWidget = ({place}) => {
               <div className=" py-4 px-4 border-t">
                   <label>Number of Guests</label>
                   <input type="number"value={numberOfGuests} onChange={ev => setNumberOfGuests(ev.target.value)}/>
-              </div>      
+              </div> 
+              {numberOfNights > 0 && (
+                <div className=" py-4 px-4 border-t">
+                <label>Fullname</label>
+                <input type="text" placeholder="Your name" value={name} onChange={ev => setName(ev.target.value)}/>
+                <label>Phone Numbers</label>
+                <input type="tel" placeholder="phone numbers" value={phone} onChange={ev => setPhone(ev.target.value)}/>
+            </div> 
+              )}     
             </div>
-            <button className="primary mt-4">
+            <button onClick={bookThisPlace} className="primary mt-4">
                 Book this place
                 {numberOfNights > 0 && ( 
                    <span> ${numberOfNights * place.price}</span>
