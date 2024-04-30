@@ -25,13 +25,16 @@ const BookingWidget = ({place}) => {
     }
     async function bookThisPlace(ev) {
         ev.preventDefault();
+        if (!user) {
+          setRedirect('/login');
+         }
         const response = {
             place: place._id,
             checkIn, checkOut, numberOfGuests,
             name, phone,
             price: numberOfNights * place.price
            }  
-           console.log(response);
+           
          await axios.post('/bookings', response);  
            
         const bookingId = response._id;
@@ -50,11 +53,11 @@ const BookingWidget = ({place}) => {
             <div className="border rounded-2xl mt-4">
               <div className="flex">
                   <div className=" py-4 px-4">
-                  <label>Check In</label>
+                  <label>Check In: </label>
                   <input type="date" value={checkIn}  onChange={ev => setCheckIn(ev.target.value)}/>
                 </div>
                 <div className=" py-4 px-4  border-l">
-                  <label>Check Out</label>
+                  <label>Check Out: </label>
                   <input type="date" value={checkOut} onChange={ev => setCheckOut(ev.target.value)} />
                 </div>
               </div>
@@ -71,7 +74,7 @@ const BookingWidget = ({place}) => {
             </div> 
               )}     
             </div>
-            <button onClick={bookThisPlace} className="primary mt-4">
+            <button onClick={bookThisPlace} className="primary mt-4" >
                 Book this place
                 {numberOfNights > 0 && ( 
                    <span> ${numberOfNights * place.price}</span>
