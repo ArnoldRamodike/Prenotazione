@@ -29,8 +29,8 @@ const RegisterPage = () => {
         <div className="-mt-32">
             <h1 className="text-4xl text-center mb-4">Register</h1>
             <form action="" className="max-w-md mx-auto" onSubmit={registerUser}>
-                <input type="email" placeholder="your@mail.com" value={email} onChange={ev =>setName(ev.target.value)}/>
-                <input type="text" placeholder="John Doe" value={name} onChange={ev =>setEmail(ev.target.value)}/>
+                <input type="text" placeholder="John Doe" value={name} onChange={ev =>setName(ev.target.value)}/>
+                <input type="email" placeholder="your@mail.com" value={email} onChange={ev =>setEmail(ev.target.value)}/>
                 <input type="password" placeholder="password"value={password} onChange={ev =>setPassword(ev.target.value)}/>
                 <button className="primary">Register</button>
                 <div className="text-center pt-2 text-gray-500">
