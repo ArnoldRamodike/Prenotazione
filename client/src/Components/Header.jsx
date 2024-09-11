@@ -13,7 +13,7 @@ const Header = () => {
             </svg>
                 <span className='font-bold text-xl'>Prenotazione</span>
             </Link>
-            <div className="flex gap-2 border border-t-gray-300 rounded-full p-2 px-4 shadow-md shadow-gray-300">
+            <div className="hidden md:flex gap-2 border border-t-gray-300 rounded-full p-2 px-4 shadow-md shadow-gray-300">
                 <div className="">
                     Anywhere
                 </div>
