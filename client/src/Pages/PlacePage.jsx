@@ -8,7 +8,6 @@ export default function PlacePage() {
     const {id} = useParams();
     const [place, setPlace] = useState('');
 
-
     useEffect(() => {
       if (!id) {
         return;
@@ -30,9 +29,9 @@ export default function PlacePage() {
             {place.address}
            </a>
         <PlaceGalary place={place}/>
-      <div className="mt-8 gap-8 grid grid-cols-1 md:grid-cols-[2fr_1fr]">
+      <div className="mt-8 gap-y-8 grid grid-cols-1 md:grid-cols-[2fr_1fr]">
         <div>
-          <div className="my-4">
+          <div className="my-4 gap-y-2">
             <h2 className="font-semibold text-2xl">Description</h2>
             {place.description}
          </div>

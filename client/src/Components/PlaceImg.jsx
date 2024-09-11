@@ -5,7 +5,7 @@ const PlaceImg = ({place, index = 0, className = null}) => {
         return 'No Photos'
     }
     if (!className) {
-        className= 'object-cover';
+        className= 'object-cover h-full';
     }
   return (
     <div>

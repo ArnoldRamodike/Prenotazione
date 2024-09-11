@@ -18,7 +18,7 @@ const LoginPage = () => {
             alert('login Successfull');
             setRedirect(true);
         } catch (error) {
-            alert('Login failed please try again later') 
+            alert('Login failed please try again later', error) 
         }
     }
     if (redirect) {
