@@ -27,3 +27,12 @@ module.exports= {
          }
     },
 }
+
+export function getUserDataFromReq(req) {
+    return new Promise((resolve, reject) => {
+        jwt.verify(req.cookies.token, jwtSecrete, {}, async(err, user) => {
+            if (err) throw err;
+            resolve(user);
+        });
+    }); 
+}

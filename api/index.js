@@ -31,7 +31,7 @@ app.use(cors({
 mongoose.connect(process.env.MONGODB_URL);
 
 app.get('/api', (req, res) => {
-    res.json('test ok');
+    res.json('App up and running ok');
 });
 
 function getUserDataFromReq(req) {
@@ -217,7 +217,6 @@ app.post('/bookings', async (req, res) => {
         res.status(422).json(error);
     }
 });
-
 
 app.get('/bookings', async (req, res) => {
     const user = await getUserDataFromReq(req);
