@@ -45,14 +45,18 @@ function getUserDataFromReq(req) {
 
 app.post('/register', async (req, res) => {
     const {name, email, password} = req.body;
-
+   
     try {
+        if (!name, !email, !password) {
+        res.json("All feileds are reqyired").status(202)
+        }else{
            const userDoc = await User.create({
             name, 
             email, 
             password : bycypt.hashSync(password, bycyptSalt),
         })
-        res.json(userDoc);
+        res.json(userDoc).status(201);
+    }
     } catch (error) {
         res.status(422).json(error);
     }
