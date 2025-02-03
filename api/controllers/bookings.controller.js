@@ -19,8 +19,9 @@ const createBooking = asyncHandler( async (req, res) => {
                 const booking = await Booking.create({
                    name: name,
                    phone: phone,
+                   user: user
                 })
-                res.status(statuscode.CREATED).json(placeDoc);
+                res.status(statuscode.CREATED).json(booking);
             })
     } catch (error) {
         res.status(statuscode.INTERNAL_SERVER_ERROR).json(error);

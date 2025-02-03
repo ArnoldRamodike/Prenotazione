@@ -1,11 +1,24 @@
 const mongoose =  require('mongoose');
 
 const placeSchema = new mongoose.Schema({
-    owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    title: String,
-    address: String,
+    owner: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User'
+    },
+    title: {
+        type: Date, 
+        required: true,
+        unique: true,
+    },
+    address: {
+        type: Date, 
+        required: true,
+    },
     photos: [String],
-    description: String,
+    description: {
+        type: Date, 
+        required: true,
+    },
     perks: [String],
     extraInfo:  String,
     checkIn: Number,
