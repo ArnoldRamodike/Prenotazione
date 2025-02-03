@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const IndexPage = () => {
   const [places, setPlaces] = useState("");
+  const baseURL = "http://localhost:4000";
 
   useEffect(() => {
     axios.get("/places").then((response) => {
@@ -20,7 +21,7 @@ const IndexPage = () => {
               {place.photos?.[0] && (
                 <img
                   className="rounded-2xl aspect-square object-cover"
-                  src={"http://localhost:4000/uploads/" + place.photos?.[0]}
+                  src={`${baseURL}/uploads/` + place.photos?.[0]}
                   alt="Place avatar"
                 />
               )}
