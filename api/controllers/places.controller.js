@@ -14,7 +14,9 @@ const createPlaces = asyncHandler( async (req, res) => {
     try {
             jwt.verify(token, jwtSecrete, {}, async(err, user) => {
                 if (err) throw err;
-    
+                if ( !address || !description || !checkIn || !checkOut) {
+                    res.status(statuscode.BAD_GATEWAY).json("Address , Description, check in and Check out are reqired fields.");
+                }else{
                 const placeDoc = await Place.create({
                    owner: user.id,
                    title, address, 
@@ -24,7 +26,8 @@ const createPlaces = asyncHandler( async (req, res) => {
                    checkOut, maxGuest
                 })
                 res.status(statuscode.CREATED).json(placeDoc);
-            })
+            }
+            });
     } catch (error) {
         res.status(statuscode.INTERNAL_SERVER_ERROR).json(error);
     }
@@ -35,15 +38,25 @@ const getPlaces = asyncHandler( async (req, res) => {
         jwt.verify(token, jwtSecrete, {}, async(err, user) => {
             if (err) throw err;
             const {id} = user;
-            const places =  await Place.find({owner: id});
-            res.status(statuscode.SUCCESS).json(places);
+            try {
+                const places =  await Place.find({owner: id});
+                res.status(statuscode.SUCCESS).json(places);
+            } catch (error) {
+                res.status(statuscode.INTERNAL_SERVER_ERROR).json(error);
+            }
+           
         })
 });
 
 const getPlace = asyncHandler(  async (req, res) => {
     const {id} = req.params;
+    try {
          const [place] =  await Place.find({_id: id});
          res.status(statuscode.FOUND).json(place);
+    } catch (error) {
+        res.status(statuscode.INTERNAL_SERVER_ERROR).json(error);
+    }
+        
 });
 
 const updatelaces = asyncHandler(  async (req, res) => {
@@ -56,13 +69,18 @@ const updatelaces = asyncHandler(  async (req, res) => {
                 const placeDoc = await Place.findById(id);
                 if (user.id === placeDoc.owner.toString()) {
                  placeDoc.set({
-                   title, address, 
-                   photos:addedPhotos, description,
-                   perks,extraInfo, 
-                   checkIn, checkOut, maxGuest
+                   title, 
+                   address, 
+                   photos:addedPhotos, 
+                   description,
+                   perks,
+                   extraInfo, 
+                   checkIn, 
+                   checkOut, 
+                   maxGuest
                 });
                 await placeDoc.save();
-                res.status(statuscode.SUCCESS).json('ok');
+                res.status(statuscode.SUCCESS).json('Place updated successfully');
              }   
             })
     } catch (error) {
