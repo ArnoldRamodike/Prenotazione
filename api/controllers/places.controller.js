@@ -88,4 +88,17 @@ const updatelaces = asyncHandler(  async (req, res) => {
     }
 });
 
-module.exports = {createPlaces, getPlace, getPlaces, updatelaces}
+const deletePlace = asyncHandler( async (req, res) => {
+    const user = await getUserDataFromReq(req);
+    const {id} = user;
+
+    try {
+        const placeDoc =  await Place.deleteOne({id})
+        res.json(placeDoc).statusMessage("Place Deleted successfully");
+    } catch (error) {
+        res.status(statuscode.INTERNAL_SERVER_ERROR).json(error)
+    }
+   
+})
+
+module.exports = {createPlaces, getPlace, getPlaces, updatelaces, deletePlace}
