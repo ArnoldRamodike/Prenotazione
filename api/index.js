@@ -13,9 +13,11 @@ const fs = require('fs');
 
 require('dotenv').config();
 
+//ROUTES IMPORTS
+import bookingRoutes from "./routes/bookings.routes";
+
 // SERVICE
 const app = express();
-
 const bycyptSalt = bycypt.genSaltSync(10);
 const jwtSecrete = 'thisisjwt'
 
@@ -29,6 +31,10 @@ app.use(cors({
 }))
 
 mongoose.connect(process.env.MONGODB_URL);
+
+
+// ROUTES 
+app.use("/api/booking", bookingRoutes);
 
 app.get('/api', (req, res) => {
     res.json('App up and running ok');
@@ -229,4 +235,6 @@ app.get('/bookings', async (req, res) => {
     res.json(bookingDoc);
 });
 
-app.listen(4000);
+// SERVER API
+const PORT = process.env.PORT || 4000;
+app.listen(PORT);

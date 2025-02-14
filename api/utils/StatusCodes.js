@@ -1,6 +1,7 @@
 exports.statuscode = {
     SUCCESS: 200,
     CREATED: 201,
+    UPDAATED: 203,
     NO_CONTENT: 204,
     FOUND: 302,
     NOT_MODIFIED: 302,
