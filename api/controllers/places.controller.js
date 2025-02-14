@@ -94,7 +94,7 @@ const deletePlace = asyncHandler( async (req, res) => {
 
     try {
         const placeDoc =  await Place.deleteOne({id})
-        res.json(placeDoc).statusMessage("Place Deleted successfully");
+        res.status(statuscode.SUCCESS).json(placeDoc).statusMessage("Place Deleted successfully");
     } catch (error) {
         res.status(statuscode.INTERNAL_SERVER_ERROR).json(error)
     }

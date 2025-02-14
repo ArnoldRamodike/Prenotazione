@@ -8,11 +8,16 @@ const {statuscode} = require('../utils/StatusCodes');
 const UploadByLink = asyncHandler(async (req, res) => {
     const {link} = req.body;
     const newName = 'photo' + Date.now()+'.jpg';
-   await imageDownloader.image({
+    try {
+        await imageDownloader.image({
         url: link,
         dest: __dirname + '/uploads/' + newName,
-    });
-    res.status(statuscode.CREATED).json(newName);
+        });
+        res.status(statuscode.CREATED).json(newName);
+    } catch (error) {
+        res.status(statuscode.INTERNAL_SERVER_ERROR).json(error)
+    }
+   
 })
 
 const photosMiddleware = multer({dest:'uploads/'});
