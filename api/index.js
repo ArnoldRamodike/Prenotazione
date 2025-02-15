@@ -15,6 +15,9 @@ require('dotenv').config();
 
 //ROUTES IMPORTS
 import bookingRoutes from "./routes/bookings.routes";
+import placesRoutes from "./routes/places.routes";
+import uploadRoutes from "./routes/upload.routes";
+import authRoutes from "./routes/auth.routes";
 
 // SERVICE
 const app = express();
@@ -35,6 +38,9 @@ mongoose.connect(process.env.MONGODB_URL);
 
 // ROUTES 
 app.use("/api/booking", bookingRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/places", placesRoutes);
+app.use("/api/upload", uploadRoutes);
 
 app.get('/api', (req, res) => {
     res.json('App up and running ok');
