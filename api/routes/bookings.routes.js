@@ -8,3 +8,5 @@ router.route("/").get(getBookings);
 router.route("/:id").get(getBooking);
 router.route("/:id").put(updateBooking);
 router.route("/:id").put(DeleteBooking);
+
+module.exports = router;

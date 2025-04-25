@@ -8,3 +8,5 @@ router.route("/").get(getPlaces);
 router.route("/:id").get(getPlace);
 router.route("/:id").put(updatelaces);
 router.route("/:id").put(deletePlace);
+
+module.exports = router;

@@ -5,3 +5,5 @@ const {UploadByLink, UploadPicture} = require("../controllers/upload.controller"
 
 router.route("/").post(UploadByLink);
 router.route("/").post(UploadPicture);
+
+module.exports = router;

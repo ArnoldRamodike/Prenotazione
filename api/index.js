@@ -14,10 +14,10 @@ const fs = require('fs');
 require('dotenv').config();
 
 //ROUTES IMPORTS
-import bookingRoutes from "./routes/bookings.routes";
-import placesRoutes from "./routes/places.routes";
-import uploadRoutes from "./routes/upload.routes";
-import authRoutes from "./routes/auth.routes";
+const bookingRoutes = require("./routes/bookings.routes");
+const placesRoutes = require("./routes/places.routes");
+const uploadRoutes = require("./routes/upload.routes");
+const authRoutes = require( "./routes/auth.routes");
 
 // SERVICE
 const app = express();
