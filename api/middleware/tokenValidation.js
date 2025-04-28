@@ -1,5 +1,6 @@
 const { json } = require("express");
 const { verify } =  require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 
 module.exports= {
@@ -52,8 +53,9 @@ module.exports= {
 
 
   getUserDataFromReq:  (req) => {
+    const token = req.cookies.accessToken;
     return new Promise((resolve, reject) => {
-        jwt.verify(req.cookies.token, jwtSecrete, {}, async(err, user) => {
+        verify(token, process.env.TOKEN_KEY, {}, (err, user) => {
             if (err) throw err;
             resolve(user);
         });

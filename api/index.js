@@ -22,7 +22,7 @@ const authRoutes = require( "./routes/auth.routes");
 // SERVICE
 const app = express();
 const bycyptSalt = bycypt.genSaltSync(10);
-const jwtSecrete = 'thisisjwt'
+const jwtSecrete = process.env.TOKEN_KEY;
 
 // Middlewares
 app.use(cookieParser());
