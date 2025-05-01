@@ -55,54 +55,6 @@ function getUserDataFromReq(req) {
     }); 
 }
 
-app.post('/register', async (req, res) => {
-    const {name, email, password} = req.body;
-   
-    try {
-        if (!name, !email, !password) {
-        res.json("All feileds are reqyired").status(202)
-        }else{
-           const userDoc = await User.create({
-            name, 
-            email, 
-            password : bycypt.hashSync(password, bycyptSalt),
-        })
-        res.json(userDoc).status(201);
-    }
-    } catch (error) {
-        res.status(422).json(error);
-    }
-})
-
-app.post('/login', async (req, res) => {
-    const {email, password} = req.body;
-
-    try {
-        const userDoc = await User.findOne({email});
-        if (userDoc) {
-            const passwordOk= bycypt.compareSync(password, userDoc.password);
-
-            if (passwordOk) {
-                jwt.sign({
-                    email: userDoc.email, 
-                    id: userDoc._id, 
-                    name: userDoc.name},
-                    jwtSecrete, {}, (err, token) =>{
-                    if (err) throw err;
-                    res.cookie('token', token).json(userDoc);
-                });
-               
-            }else{
-                req.status(422).json('Incorrect Password')
-            }
-        }else{
-        req.json('email does not exist');
-        }
-    } catch (error) {
-        res.status(422).json(error);
-    }
-})
-
 app.get('/profile', async (req, res) => {
     const { token} = req.cookies;
     if (token) {
@@ -178,16 +130,6 @@ app.get('/user-places', async (req, res) => {
         })
 });
 
-app.get('/places', async (req, res) => {
-            const places =  await Place.find();
-            res.json(places);
-});
-
-app.get('/places/:id', async (req, res) => {
-    const {id} = req.params;
-         const [place] =  await Place.find({_id: id});
-         res.json(place);
-});
 
 app.put('/places/:id', async (req, res) => {
     const {id, title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest, price } = req.body;
@@ -234,12 +176,6 @@ app.post('/bookings', async (req, res) => {
     }
 });
 
-app.get('/bookings', async (req, res) => {
-    const user = await getUserDataFromReq(req);
-    const {id} = user;
-    const bookingDoc =  await Booking.find({user: id}).populate('place');
-    res.json(bookingDoc);
-});
 
 // SERVER API
 const PORT = process.env.PORT || 4000;
