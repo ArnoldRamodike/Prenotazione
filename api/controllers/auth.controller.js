@@ -9,6 +9,7 @@ const {statuscode} = require('../utils/StatusCodes');
 //const errorHandler = require("../middleware/errorHandler")
 
 mongoose.connect(process.env.MONGODB_URL);
+const bycyptSalt = bycypt.genSaltSync(10);
 
 const Register = asyncHandler( async (req, res) => {
     const {name, email, password} = req.body;
@@ -18,10 +19,10 @@ const Register = asyncHandler( async (req, res) => {
             res.status(statuscode.VALIDATION_ERROR).json({message: 'All fields are required!'});
         }
            const userDoc = await User.create({
-            name, 
-            email, 
-            password : bycypt.hashSync(password, bycyptSalt),
-        })
+            name: name, 
+            email: email, 
+            password: bycypt.hashSync(password, bycyptSalt)
+        });
         res.json(userDoc);
     } catch (error) {
         res.status(statuscode.INTERNAL_SERVER_ERROR).json(error);
@@ -35,6 +36,7 @@ const Login  = asyncHandler(async (req, res) => {
         if (!email, !password) {
             res.status(statuscode.VALIDATION_ERROR).json({message: 'Email and Password are required.'});
         }
+        
         const userDoc = await User.findOne({email});
         if (userDoc) {
             const passwordOk= bycypt.compareSync(password, userDoc.password);
@@ -44,7 +46,7 @@ const Login  = asyncHandler(async (req, res) => {
                     email: userDoc.email, 
                     id: userDoc._id, 
                     name: userDoc.name},
-                    jwtSecrete, {}, (err, token) =>{
+                    process.env.TOKEN_KEY, {}, (err, token) =>{
                     if (err) throw err;
                     res.cookie('token', token).json(userDoc);
                 });
