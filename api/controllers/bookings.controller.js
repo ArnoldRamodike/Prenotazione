@@ -38,8 +38,8 @@ const createBooking = asyncHandler( async (req, res) => {
 });
 
 const getBookings = asyncHandler( async (req, res) => {
-    // const user = await getUserDataFromReq(req);
-    // const {id} = user;
+    const user = await getUserDataFromReq(req);
+    const {id} = user;
     try {
         const bookingDoc =  await Booking.find().populate('place');
         res.json(bookingDoc);

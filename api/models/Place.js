@@ -6,17 +6,17 @@ const placeSchema = new mongoose.Schema({
         ref: 'User'
     },
     title: {
-        type: Date, 
+        type: String, 
         required: true,
         unique: true,
     },
     address: {
-        type: Date, 
+        type: String, 
         required: true,
     },
     photos: [String],
     description: {
-        type: Date, 
+        type: String, 
         required: true,
     },
     perks: [String],

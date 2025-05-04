@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler")
 const mongoose = require("mongoose");
 const Place = require('../models/Place');
 const dotevn = require("dotenv").config();
-
+const { getUserDataFromReq } = require("../middleware/tokenValidation");
 const {statuscode} = require('../utils/StatusCodes');
 
 mongoose.connect(process.env.MONGODB_URL);
@@ -10,18 +10,24 @@ mongoose.connect(process.env.MONGODB_URL);
 
 const createPlaces = asyncHandler( async (req, res) => {
     const {title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest  } = req.body;
+     const user = await getUserDataFromReq(req);
     try {
             if ( !address || !description || !checkIn || !checkOut) {
                 res.status(statuscode.BAD_GATEWAY).json("Address , Description, check in and Check out are reqired fields.");
             }else{
                 const placeDoc = await Place.create({
                    owner: user.id,
-                   title, address, 
+                   title, 
+                   address, 
                    photos:addedPhotos, 
-                   description,perks,
-                   extraInfo, checkIn, 
-                   checkOut, maxGuest
+                   description,
+                   perks,
+                   extraInfo, 
+                   checkIn, 
+                   checkOut, 
+                   maxGuest
                 });
+            
                 res.status(statuscode.CREATED).json(placeDoc);
             }
            
@@ -52,9 +58,10 @@ const getPlace = asyncHandler(  async (req, res) => {
         
 });
 
-const updatelaces = asyncHandler(  async (req, res) => {
-    const {id, title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest  } = req.body;
-
+const updatePlaces = asyncHandler(  async (req, res) => {
+    const { title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest  } = req.body;
+    const {id} = req.params;
+    const user = await getUserDataFromReq(req);
     try {
         const placeDoc = await Place.findById(id);
             if (user.id === placeDoc.owner.toString()) {
@@ -90,4 +97,4 @@ const deletePlace = asyncHandler( async (req, res) => {
    
 })
 
-module.exports = {createPlaces, getPlace, getPlaces, updatelaces, deletePlace}
+module.exports = {createPlaces, getPlace, getPlaces, updatePlaces, deletePlace}
