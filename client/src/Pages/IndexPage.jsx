@@ -7,7 +7,7 @@ const IndexPage = () => {
   const baseURL = "http://localhost:4000";
 
   useEffect(() => {
-    axios.get("/places").then((response) => {
+    axios.get("/api/places").then((response) => {
       setPlaces(response.data);
     });
   }, []);

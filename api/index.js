@@ -37,7 +37,7 @@ mongoose.connect(process.env.MONGODB_URL);
 
 
 // ROUTES 
-app.use("/api/booking", bookingRoutes);
+app.use("/api/bookings", bookingRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/places", placesRoutes);
 app.use("/api/upload", uploadRoutes);
