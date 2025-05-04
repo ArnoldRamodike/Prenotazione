@@ -58,6 +58,18 @@ const getPlace = asyncHandler(  async (req, res) => {
         
 });
 
+const getUserPlaces = asyncHandler(  async (req, res) => {
+    const user = await getUserDataFromReq(req);
+  
+    try {
+         const places =  await Place.find({owner: user.id});
+        res.status(statuscode.FOUND).json(places);
+    } catch (error) {
+        res.status(statuscode.INTERNAL_SERVER_ERROR).json(error);
+    }
+            
+});
+
 const updatePlaces = asyncHandler(  async (req, res) => {
     const { title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest  } = req.body;
     const {id} = req.params;
@@ -97,4 +109,4 @@ const deletePlace = asyncHandler( async (req, res) => {
    
 })
 
-module.exports = {createPlaces, getPlace, getPlaces, updatePlaces, deletePlace}
+module.exports = {createPlaces, getPlace, getPlaces, getUserPlaces, updatePlaces, deletePlace}
