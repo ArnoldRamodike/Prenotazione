@@ -65,7 +65,7 @@ const Login  = asyncHandler(async (req, res) => {
  const Profile = asyncHandler( async (req, res) => {
     const { token} = req.cookies;
     if (token) {
-        jwt.verify(token, jwtSecrete, {}, async(err, user) => {
+        jwt.verify(token, process.env.TOKEN_KEY, {}, async(err, user) => {
             if (err) throw err;
 
             const {name, email, _id} =  await User.findById(user.id);

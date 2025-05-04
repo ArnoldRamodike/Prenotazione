@@ -43,35 +43,8 @@ app.use("/api/places", placesRoutes);
 app.use("/api/upload", uploadRoutes);
 
 app.get('/api', (req, res) => {
-    res.json('App up and running ok');
+    res.status(200).json('App up and running ok');
 });
-
-function getUserDataFromReq(req) {
-    return new Promise((resolve, reject) => {
-        jwt.verify(req.cookies.token, jwtSecrete, {}, async(err, user) => {
-            if (err) throw err;
-            resolve(user);
-        });
-    }); 
-}
-
-app.get('/profile', async (req, res) => {
-    const { token} = req.cookies;
-    if (token) {
-        jwt.verify(token, jwtSecrete, {}, async(err, user) => {
-            if (err) throw err;
-
-            const {name, email, _id} =  await User.findById(user.id);
-            res.json({name, email, _id});
-        })
-    }else{
-        res.json(null);
-    }
-});
-
-app.post('/logout', async (req, res) => {
-    res.cookie('token', '').json(true);
-})
 
 app.post('/upload-by-link', async (req, res) => {
     const {link} = req.body;
@@ -97,85 +70,6 @@ app.post('/upload', photosMiddleware.array('photos', 100),
         }
     res.json(uploadedFiles);
 })
-
-app.post('/places', async (req, res) => {
-    const {title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest, price } = req.body;
-    const { token} = req.cookies;
-    try {
-            jwt.verify(token, jwtSecrete, {}, async(err, user) => {
-                if (err) throw err;
-    
-                const placeDoc = await Place.create({
-                   owner: user.id,
-                   title, address, 
-                   photos:addedPhotos, 
-                   description,perks,
-                   extraInfo, checkIn, 
-                   checkOut, maxGuest, price
-                })
-                res.json(placeDoc);
-            })
-    } catch (error) {
-        res.status(422).json(error);
-    }
-})
-
-app.get('/user-places', async (req, res) => {
-    const { token} = req.cookies;
-        jwt.verify(token, jwtSecrete, {}, async(err, user) => {
-            if (err) throw err;
-            const {id} = user;
-            const places =  await Place.find({owner: id});
-            res.json(places);
-        })
-});
-
-
-app.put('/places/:id', async (req, res) => {
-    const {id, title, address, addedPhotos,description,perks,extraInfo, checkIn, checkOut, maxGuest, price } = req.body;
-    const { token} = req.cookies;
-
-    try {
-            jwt.verify(token, jwtSecrete, {}, async(err, user) => {
-                if (err) throw err;
-                const placeDoc = await Place.findById(id);
-                if (user.id === placeDoc.owner.toString()) {
-                 placeDoc.set({
-                   title, address, 
-                   photos:addedPhotos, description,
-                   perks,extraInfo, 
-                   checkIn, checkOut, 
-                   maxGuest, price
-                });
-                await placeDoc.save();
-                res.json('ok');
-             }   
-            })
-    } catch (error) {
-        res.status(422).json(error);
-    }
-});
-
-app.post('/bookings', async (req, res) => {
-    const user = await getUserDataFromReq(req);
-    const {place, checkIn, checkOut, numberOfGuests, name, phone, price} = req.body;
-    if (!place, !checkIn, !checkOut, !numberOfGuests, !name, !phone, !price) {
-        res.status(422).json({message:'please enter valid fields'})
-    }
-    try {
-        const bookingDoc = await Booking.create({
-            place, user: user.id,
-            checkIn, checkOut, 
-            numberOfGuests, name, 
-            phone, price
-            })
-
-            res.json(bookingDoc);
-    } catch (error) {
-        res.status(422).json(error);
-    }
-});
-
 
 // SERVER API
 const PORT = process.env.PORT || 4000;
