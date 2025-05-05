@@ -7,7 +7,7 @@ import PlaceImg from "../Components/PlaceImg";
 const PlacesPage = () => {
   const [places, setPlaces] = useState([]);
   useEffect(() => {
-    axios.get("/api/user-places").then(({ data }) => {
+    axios.get("/api/places/user-places").then(({ data }) => {
       setPlaces(data);
     });
   }, []);
