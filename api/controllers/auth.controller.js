@@ -38,9 +38,9 @@ const Login  = asyncHandler(async (req, res) => {
         }
         
         const userDoc = await User.findOne({email});
+
         if (userDoc) {
             const passwordOk= bycypt.compareSync(password, userDoc.password);
-
             if (passwordOk) {
                 jwt.sign({
                     email: userDoc.email, 
@@ -50,12 +50,13 @@ const Login  = asyncHandler(async (req, res) => {
                     if (err) throw err;
                     res.cookie('token', token).json(userDoc);
                 });
+            
                
             }else{
-                req.status(statuscode.VALIDATION_ERROR).json('Incorrect Password')
+                res.status(statuscode.VALIDATION_ERROR).json('Incorrect Password or Email')
             }
         }else{
-        req.status(statuscode.NOT_FOUND).json({message:'email does not exist'});
+        res.status(statuscode.NOT_FOUND).json({message:'email does not exist'});
         }
     } catch (error) {
         res.status(statuscode.INTERNAL_SERVER_ERROR).json(error);
@@ -63,7 +64,9 @@ const Login  = asyncHandler(async (req, res) => {
 })
 
  const Profile = asyncHandler( async (req, res) => {
-    const { token} = req.cookies;
+    const { token} = req.cookies.accessToken;
+    console.log("Token", token);
+    
     if (token) {
         jwt.verify(token, process.env.TOKEN_KEY, {}, async(err, user) => {
             if (err) throw err;
