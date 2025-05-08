@@ -15,7 +15,7 @@ const LoginPage = () => {
       const { response } = await axios.post(
         "/api/auth/login",
         { email, password },
-        { withCredentials: false }
+        { withCredentials: true }
       );
       setuser(response);
       alert("login Successfull");
