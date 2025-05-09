@@ -28,7 +28,7 @@ const createPlaces = asyncHandler( async (req, res) => {
                    maxGuest
                 });
             
-                res.status(statuscode.CREATED).json(placeDoc);
+                res.status(statuscode.SUCCESS).json(placeDoc);
             }
            
     } catch (error) {
@@ -51,7 +51,7 @@ const getPlace = asyncHandler(  async (req, res) => {
     const {id} = req.params;
     try {
          const [place] =  await Place.find({_id: id});
-         res.status(statuscode.FOUND).json(place);
+         res.status(statuscode.SUCCESS).json(place);
     } catch (error) {
         res.status(statuscode.INTERNAL_SERVER_ERROR).json(error);
     }
@@ -63,7 +63,7 @@ const getUserPlaces = asyncHandler(  async (req, res) => {
   
     try {
          const places =  await Place.find({owner: user.id});
-        res.status(statuscode.FOUND).json(places);
+        res.status(statuscode.SUCCESS).json(places);
     } catch (error) {
         res.status(statuscode.INTERNAL_SERVER_ERROR).json(error);
     }
