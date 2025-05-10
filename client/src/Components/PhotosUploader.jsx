@@ -37,6 +37,9 @@ const PhotosUploader = ({ addedPhotos, onChange }) => {
           }
           return [...prev, ...filenames];
         });
+      })
+      .catch((err) => {
+        console.log("Error", err);
       });
   }
 
