@@ -19,6 +19,11 @@ const AccountPage = () => {
     setuser(null);
     setRedirect("/");
   }
+  async function updateProfile() {
+    await axios.post("/api/auth/profile");
+
+    setRedirect("/");
+  }
 
   if (!ready) {
     return "Loading...";
@@ -52,6 +57,21 @@ const AccountPage = () => {
             value={user.email}
             disabled
           />
+          <input
+            type="text"
+            placeholder={"Password"}
+            value={user.password}
+            onChange={(ev) => () => {
+              ev.target.value;
+            }}
+          />
+          <br />
+          <button
+            onClick={Logout}
+            className="primary max-w-sm mt-20 !bg-sky-600"
+          >
+            Update
+          </button>
           <br />
           <button onClick={Logout} className="primary max-w-sm mt-20">
             Logout
