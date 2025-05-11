@@ -90,7 +90,7 @@ const BookingPage = () => {
             </div>
             <div className="bg-primary p-4 text-white rounded-2xl">
               <div className="">Total Price</div>
-              <div className="text-2xl">${booking.price}</div>
+              <div className="text-2xl">R{booking.price}</div>
             </div>
           </div>
         </div>
