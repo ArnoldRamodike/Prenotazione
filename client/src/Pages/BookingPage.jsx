@@ -21,6 +21,12 @@ const BookingPage = () => {
     return "";
   }
 
+  async function CancelBooking() {
+    await axios.delete("/api/bookings/" + id);
+
+    setRedirect("/");
+  }
+
   return (
     <>
       <AccountNav />
@@ -95,6 +101,9 @@ const BookingPage = () => {
           </div>
         </div>
         <PlaceGalary place={booking.place} />
+        <button onClick={CancelBooking} className="primary max-w-sm mt-20">
+          Cancel Booking
+        </button>
       </div>
     </>
   );
